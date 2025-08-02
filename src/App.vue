@@ -1,9 +1,18 @@
 <script setup lang="ts">
 
 import { invoke } from '@tauri-apps/api/core'
-import { ref } from 'vue'
+import UserInfo from './interface/UserInfo.ts';
+import { ref, VueElement } from 'vue'
+import { reactive, toRefs } from 'vue'
+const state = reactive({
+  circleUrl:
+    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+  squareUrl:
+    'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+  sizeList: ['small', '', 'large'] as const,
+})
 
-
+let userInfo = ref<UserInfo|null>(null)
 const gamePath = ref('')
 const successMessage = ref('')
 const errorMessage = ref('')
@@ -23,6 +32,16 @@ async function backupConfigs() {
   }
 }
 
+async function init() {
+  clearMessages()
+  try {
+    userInfo = await invoke('init')
+    console.log(`testTag userInfo:${userInfo}`);
+    
+  } catch (e) {
+    errorMessage.value = '初始化失败：' + e
+  }
+}
 async function restoreConfigs() {
   clearMessages()
   try {
@@ -54,12 +73,21 @@ async function detectPath() {
 
 <template>
   <main class="container">
-    <h1>英雄联盟配置管理工具</h1>
+    <div class="block">
+      <el-avatar :size="50" :src="state.circleUrl" />
+    </div>
+    <span>
+      <el-text :title="name">欢迎！</el-text>
+      <h1>英雄联盟配置管理工具</h1>
+    </span>
 
+
+    <button type="button" @click="init">init</button>
 
     <span style="box-sizing: border-box;width: 100%; ">
       <label style="">英雄联盟安装目录：</label>
-      <input style="display: inline-block; width: 60%; " v-model="gamePath" placeholder="例如 C:\Riot Games\League of Legends" />
+      <input style="display: inline-block; width: 60%; " v-model="gamePath"
+        placeholder="例如 C:\Riot Games\League of Legends" />
     </span>
 
     <div>

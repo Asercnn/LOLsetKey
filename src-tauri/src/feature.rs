@@ -61,7 +61,7 @@ pub fn find_lol_root() -> Option<String> {
         };
 
         // 匹配进程名
-        if exe_name.contains("leagueclient") || exe_name.contains("league of legends") {
+        if exe_name.contains("leagueclient") || exe_name.contains("league of legends") || exe_name.contains("League of Legends") {
             println!("发现英雄联盟进程路径: {}", exe_path?.display());
             // 往上两级目录通常是根目录
             let root_dir: &Path = match exe_path?.parent().and_then(|p| p.parent()) {

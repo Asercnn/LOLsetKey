@@ -1,6 +1,9 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod feature;
+mod lcu;
+mod http;
 use feature::{backup_configs, restore_configs, find_lol_root}; // 导入函数
+use lcu::{init};
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -8,7 +11,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             backup_configs,
             restore_configs,
-            find_lol_root
+            find_lol_root,
+            init
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
